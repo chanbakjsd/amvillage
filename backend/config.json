@@ -1,0 +1,42 @@
+{
+	"listen_addr": ":8080",
+
+	"currencies": ["A", "B", "C", "D", "E", "F"],
+	"teams": [
+		{
+			"name": "Group 1",
+			"password": "group1",
+			"is_admin": false
+		},
+		{
+			"name": "Group 2",
+			"password": "group2",
+			"is_admin": false
+		},
+		{
+			"name": "Group 3",
+			"password": "group3",
+			"is_admin": false
+		},
+		{
+			"name": "Group 4",
+			"password": "group4",
+			"is_admin": false
+		},
+		{
+			"name": "Group 5",
+			"password": "group5",
+			"is_admin": false
+		},
+		{
+			"name": "Group 6",
+			"password": "group6",
+			"is_admin": false
+		},
+		{
+			"name": "Admin",
+			"password": "admin",
+			"is_admin": true
+		}
+	]
+}
