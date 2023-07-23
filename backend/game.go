@@ -140,12 +140,7 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 			return
 		}
 		g.login(c, username, string(password))
-		data, err := json.Marshal(g.game)
-		if err != nil {
-			log.Fatalln("Error marshalling game state:", err)
-		}
-		msg := "state " + string(data)
-		go c.Write(msg)
+		g.pushState(c)
 	case "lock":
 		if len(args) != 1 {
 			go c.Write("error Unexpected argument")
@@ -262,7 +257,12 @@ func (g *GameState) trade(c *Conn, to int, amount []int) {
 
 // pushState pushes the state to the specified connection.
 func (g *GameState) pushState(c *Conn) {
-	data, err := json.Marshal(g.game)
+	state := struct {
+		Game
+		Team     int    `json:"team"`
+		Username string `json:"username"`
+	}{g.game, c.team, c.username}
+	data, err := json.Marshal(state)
 	if err != nil {
 		log.Fatalln("Error marshalling game state:", err)
 	}
