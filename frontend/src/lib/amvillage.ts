@@ -36,7 +36,7 @@ export const error = writable("")
 export const ws = writable<WebSocket>()
 
 export const connect = () => {
-	const url = new URL("ws://localhost:8080/ws") // "./ws", location.href)
+	const url = new URL("./ws", location.href)
 	url.protocol = location.protocol === "https:" ? "wss:" : "ws:"
 	const websocket = new WebSocket(url)
 	websocket.onopen = () => {

@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/fs"
 	"log"
@@ -50,7 +51,7 @@ func main() {
 	g := NewGameState(cfg)
 	go g.Loop()
 	http.HandleFunc("/ws", g.handleWebsocket)
-	http.Handle("/", http.FileServer(http.FS(frontend)))
+	http.Handle("/", http.FileServer(http.FS(spaFS{frontend})))
 	fmt.Println("Listening on", cfg.ListenAddr)
 	if err := http.ListenAndServe(cfg.ListenAddr, nil); err != nil {
 		log.Println("Error listening and serving:", err)
@@ -69,4 +70,19 @@ func readConfig(filename string, cfg *Config) error {
 		return fmt.Errorf("error decoding config: %w", err)
 	}
 	return nil
+}
+
+type spaFS struct {
+	fs.FS
+}
+
+// Open implements fs.FS. It forces all files that doesn't exist to index.html.
+func (s spaFS) Open(name string) (fs.File, error) {
+	f, err := s.FS.Open(name)
+	switch {
+	case errors.Is(err, fs.ErrNotExist):
+		return s.FS.Open("index.html")
+	default:
+		return f, err
+	}
 }
