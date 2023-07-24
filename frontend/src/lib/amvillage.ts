@@ -13,8 +13,13 @@ export type Config = {
 	currencies: string[]
 	teams: {
 		name: string
-		isAdmin: boolean
+		is_admin: boolean
 	}[]
+}
+
+type Lock = {
+	member: string
+	millis_left: number
 }
 
 export const state = writable<State>({
@@ -35,7 +40,7 @@ export const connect = () => {
 	const websocket = new WebSocket(url)
 	websocket.onopen = () => {
 		connected.set(true)
-		websocket.send("login " + btoa("admin") + " Wen Xu")
+		websocket.send("login " + btoa("group1") + " Wen Xu")
 	}
 	websocket.onclose = () => {
 		connected.set(false)

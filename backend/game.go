@@ -90,9 +90,9 @@ func (g *GameState) tick(delta time.Duration) {
 			continue
 		}
 		lock.MillisLeft -= int(delta.Milliseconds())
+		g.update = true
 		if lock.MillisLeft <= 0 {
 			g.game.Locks[i] = nil
-			g.update = true
 		}
 	}
 	if !g.update {
