@@ -1,12 +1,19 @@
 <script lang="ts">
-	import { connected } from "./lib/amvillage"
+	import { onMount } from "svelte"
+	import { connect, connected } from "./lib/amvillage"
 	import { status } from "./lib/state"
+	import Login from "./views/Login.svelte"
 	import MainMenu from "./views/MainMenu.svelte"
 	import Trade from "./views/Trade.svelte"
 
+	onMount(() => {
+		connect()
+	})
+
 	const views = {
-		"mainMenu": MainMenu,
-		"trade": Trade,
+		login: Login,
+		mainMenu: MainMenu,
+		trade: Trade,
 	}
 </script>
 

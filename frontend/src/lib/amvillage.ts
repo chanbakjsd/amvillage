@@ -31,6 +31,7 @@ export const state = writable<State>({
 })
 
 export const connected = writable(false)
+export const error = writable("")
 
 export const ws = writable<WebSocket>()
 
@@ -40,7 +41,6 @@ export const connect = () => {
 	const websocket = new WebSocket(url)
 	websocket.onopen = () => {
 		connected.set(true)
-		websocket.send("login " + btoa("group1") + " Wen Xu")
 	}
 	websocket.onclose = () => {
 		connected.set(false)
@@ -66,6 +66,9 @@ export const connect = () => {
 			state.set(JSON.parse(content))
 			break
 		case "error":
+			console.warn(content)
+			error.set(content)
+			break
 		default:
 			console.warn("unknown message", data)
 		}

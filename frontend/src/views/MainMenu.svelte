@@ -1,19 +1,15 @@
 <script lang="ts">
-	import { onMount } from "svelte"
 	import { fly } from "svelte/transition"
 	import Bar from "../components/Bar.svelte"
 	import Button from "../components/Button.svelte"
-	import { connect, state, ws } from "../lib/amvillage"
+	import { state, ws } from "../lib/amvillage"
 	import { status } from "../lib/state"
-
-	onMount(() => {
-		connect()
-	})
 
 	$: teamName = $state.config.teams[$state.team]?.name ?? ""
 	$: balance = $state.balances[$state.team] ?? Array($state.config.currencies.length)
 	$: sum = Math.min(...balance)
 	$: max = Math.max(...balance)
+	$: lock = $state.locks[$state.team]
 
 	let loading = false
 	const trade = (i: number) => () => {
@@ -52,11 +48,17 @@
 		</table>
 	</div>
 	<div class="trade">
-		{#each $state.config.teams as team, i}
-			{#if i !== $state.team}
-				<Button on:click={trade(i)} disabled={loading}>{team.name}</Button>
-			{/if}
-		{/each}
+		{#if $state.config.teams[$state.team].is_admin || lock === null}
+			{#each $state.config.teams as team, i}
+				{#if i !== $state.team}
+					<Button on:click={trade(i)} disabled={loading}>{team.name}</Button>
+				{/if}
+			{/each}
+		{:else}
+			<span class="error">
+				{lock.member}正在交易中（{Math.floor(lock.millis_left / 1000)}秒后失效）
+			</span>
+		{/if}
 	</div>
 </main>
 
@@ -87,5 +89,8 @@
 	}
 	.trade {
 		@apply flex flex-wrap gap-2 justify-center;
+	}
+	.error {
+		@apply text-red-800;
 	}
 </style>

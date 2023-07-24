@@ -19,7 +19,7 @@
 		$ws.send("cancel")
 	}
 	const trade = () => {
-		$ws.send(`trade ${target} ${value.map((a) => `${a}`).join(" ")}`)
+		$ws.send(`trade ${target} ${value.map(a => `${a}`).join(" ")}`)
 		returnToMenu()
 	}
 </script>
@@ -30,13 +30,13 @@
 			<div class="error">交易失败，请重新尝试</div>
 		{:else if lock.member !== $state.username}
 			<div class="error">
-				<b>{$state.locks[$state.team].member}</b>正在交易中
+				<span><b>{$state.locks[$state.team].member}</b>正在交易中</span>
 			</div>
 		{:else}
 			<div class="trade">
 				<div>
 					<span class="explainer">转账至{$state.config.teams[target].name}</span>
-					<span class="lock">您剩下<b>{Math.floor(lock.millis_left/1000)}</b>秒</span>
+					<span class="lock">您剩下<b>{Math.floor(lock.millis_left / 1000)}</b>秒</span>
 					<hr />
 				</div>
 				<div class="control">
@@ -52,7 +52,7 @@
 	</div>
 	<div class="buttons">
 		{#if lock?.member === $state.username}
-			<button class="confirm" on:click={trade} disabled={value.every((a) => !a)}>成交</button>
+			<button class="confirm" on:click={trade} disabled={value.every(a => !a)}>成交</button>
 		{/if}
 		<Button on:click={cancel} classes="w-full rounded-full">回到主页面</Button>
 	</div>

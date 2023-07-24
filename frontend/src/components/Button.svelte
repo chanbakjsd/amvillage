@@ -7,7 +7,7 @@
 
 <style lang="postcss">
 	button {
-		@apply border border-black p-2 rounded-xl cursor-pointer transition-all;
+		@apply border border-black px-4 py-2 rounded-xl cursor-pointer transition-all;
 		@apply hover:bg-black hover:text-white;
 		@apply disabled:bg-gray-300 disabled:text-gray-700;
 	}
