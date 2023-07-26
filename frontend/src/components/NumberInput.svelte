@@ -13,7 +13,7 @@
 		release()
 		let speed = 0.1
 		let internalValue = value - 0
-		timeout = setInterval(() => {
+		const update = () => {
 			const prev = internalValue
 			internalValue += speed * num
 			internalValue = cap(internalValue)
@@ -27,7 +27,9 @@
 				value = Math.floor(internalValue)
 			}
 			speed *= 1.1
-		}, 50)
+		}
+		update()
+		timeout = setInterval(update, 50)
 	}
 	const release = () => {
 		if (timeout === null) return
