@@ -249,7 +249,6 @@ func (g *GameState) trade(c *Conn, to int, amount []int) {
 		}
 	}
 	// Execute the trade.
-	g.update = true
 	for i, v := range amount {
 		g.game.Balances[from][i] -= v
 		g.game.Balances[to][i] += v
