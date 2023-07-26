@@ -10,7 +10,7 @@
 	$: lock = $state.locks[$state.team]
 	$: target = $status.status === "trade" ? $status.target : 0
 	$: tradeOK =
-		value.some(num => num > 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
+		value.some(num => num !== 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
 	const returnToMenu = () => {
 		$status = {
 			status: "mainMenu",
@@ -30,7 +30,7 @@
 	<div class="content">
 		{#if $state.locks[$state.team] === null && !isAdmin}
 			<div class="error">交易失败，请重新尝试</div>
-		{:else if lock.member !== $state.username}
+		{:else if lock?.member !== $state.username && !isAdmin}
 			<div class="error">
 				<span><b>{$state.locks[$state.team].member}</b>正在交易中</span>
 			</div>
@@ -38,7 +38,9 @@
 			<div class="trade">
 				<div>
 					<span class="explainer">转账至{$state.config.teams[target].name}</span>
-					<span class="lock">您剩下<b>{Math.floor(lock.millis_left / 1000)}</b>秒</span>
+					{#if !isAdmin}
+						<span class="lock">您剩下<b>{Math.floor(lock.millis_left / 1000)}</b>秒</span>
+					{/if}
 					<hr />
 				</div>
 				<div class="control">
@@ -57,7 +59,7 @@
 		{/if}
 	</div>
 	<div class="buttons">
-		{#if lock?.member === $state.username}
+		{#if lock?.member === $state.username || isAdmin}
 			<button class="confirm" on:click={trade} disabled={!tradeOK}>成交</button>
 		{/if}
 		<Button on:click={cancel} classes="w-full rounded-full">回到主页面</Button>

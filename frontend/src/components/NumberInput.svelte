@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let min: number | undefined = 0
+	export let min: number | undefined
 	export let max: number | undefined
 	export let value = min
 
