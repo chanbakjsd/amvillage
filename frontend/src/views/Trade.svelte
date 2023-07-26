@@ -5,10 +5,11 @@
 	import { state, ws } from "../lib/amvillage"
 	import { status } from "../lib/state"
 
+	const value = Array($state.config.currencies.length).fill(0)
 	$: isAdmin = $state.config.teams[$state.team].is_admin
 	$: lock = $state.locks[$state.team]
 	$: target = $status.status === "trade" ? $status.target : 0
-	const value = Array($state.config.currencies.length).fill(0)
+	$: tradeOK = value.some(num => num > 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
 	const returnToMenu = () => {
 		$status = {
 			status: "mainMenu",
@@ -52,7 +53,7 @@
 	</div>
 	<div class="buttons">
 		{#if lock?.member === $state.username}
-			<button class="confirm" on:click={trade} disabled={value.every(a => !a)}>成交</button>
+			<button class="confirm" on:click={trade} disabled={!tradeOK}>成交</button>
 		{/if}
 		<Button on:click={cancel} classes="w-full rounded-full">回到主页面</Button>
 	</div>

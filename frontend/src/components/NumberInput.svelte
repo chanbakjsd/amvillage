@@ -27,12 +27,16 @@
 	const release = () => {
 		clearInterval(timeout)
 	}
+
+	const update = () => {
+		value = cap(value)
+	}
 </script>
 
 <div>
-	<button on:mousedown={hold(-1)} on:mouseup={release} disabled={value === min}>−</button>
-	<input type="number" inputmode="numeric" {min} {max} bind:value />
-	<button on:mousedown={hold(1)} on:mouseup={release} disabled={value === max}>+</button>
+	<button on:mousedown={hold(-1)} on:mouseup={release} disabled={value <= min}>−</button>
+	<input type="number" inputmode="numeric" {min} {max} bind:value on:change={update} />
+	<button on:mousedown={hold(1)} on:mouseup={release} disabled={value >= max}>+</button>
 </div>
 
 <style lang="postcss">

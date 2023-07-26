@@ -229,6 +229,7 @@ func (g *GameState) trade(c *Conn, to int, amount []int) {
 	if !g.game.Teams[from].IsAdmin && !g.releaseLock(c) {
 		return
 	}
+	g.update = true
 	if to < 0 || to >= len(g.game.Teams) {
 		go c.Write("error Invalid target team ID")
 		return
