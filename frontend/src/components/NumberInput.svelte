@@ -3,13 +3,14 @@
 	export let max: number | undefined
 	export let value = min
 
-	let timeout: number
+	let timeout: number | null = null
 	const cap = (num: number): number => {
 		if (typeof min === "number") num = Math.max(min, num)
 		if (typeof max === "number") num = Math.min(max, num)
 		return num
 	}
 	const hold = (num: number) => () => {
+		release()
 		let speed = 0.1
 		let internalValue = value - 0
 		timeout = setInterval(() => {
@@ -20,12 +21,18 @@
 				clearInterval(timeout)
 				return
 			}
-			value = Math.ceil(internalValue)
+			if (num > 0) {
+				value = Math.ceil(internalValue)
+			} else {
+				value = Math.floor(internalValue)
+			}
 			speed *= 1.1
 		}, 50)
 	}
 	const release = () => {
+		if (timeout === null) return
 		clearInterval(timeout)
+		timeout = null
 	}
 
 	const update = () => {
@@ -34,9 +41,21 @@
 </script>
 
 <div>
-	<button on:mousedown={hold(-1)} on:mouseup={release} disabled={value <= min}>−</button>
+	<button
+		on:mousedown={hold(-1)}
+		on:mouseup={release}
+		on:touchstart|preventDefault={hold(-1)}
+		on:touchend|preventDefault={release}
+		disabled={value <= min}>−</button
+	>
 	<input type="number" inputmode="numeric" {min} {max} bind:value on:change={update} />
-	<button on:mousedown={hold(1)} on:mouseup={release} disabled={value >= max}>+</button>
+	<button
+		on:mousedown={hold(1)}
+		on:mouseup={release}
+		on:touchstart|preventDefault={hold(1)}
+		on:touchend|preventDefault={release}
+		disabled={value >= max}>+</button
+	>
 </div>
 
 <style lang="postcss">
