@@ -9,7 +9,8 @@
 	$: isAdmin = $state.config.teams[$state.team].is_admin
 	$: lock = $state.locks[$state.team]
 	$: target = $status.status === "trade" ? $status.target : 0
-	$: tradeOK = value.some(num => num > 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
+	$: tradeOK =
+		value.some(num => num > 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
 	const returnToMenu = () => {
 		$status = {
 			status: "mainMenu",
@@ -27,7 +28,7 @@
 
 <main transition:fly={{ y: 500 }}>
 	<div class="content">
-		{#if $state.locks[$state.team] === null}
+		{#if $state.locks[$state.team] === null && !isAdmin}
 			<div class="error">交易失败，请重新尝试</div>
 		{:else if lock.member !== $state.username}
 			<div class="error">
@@ -44,7 +45,11 @@
 					{#each $state.config.currencies as currency, i}
 						<div>
 							<span>{currency}</span>
-							<NumberInput max={isAdmin ? undefined : $state.balances[$state.team][i]} bind:value={value[i]} />
+							<NumberInput
+								min={isAdmin ? undefined : 0}
+								max={isAdmin ? undefined : $state.balances[$state.team][i]}
+								bind:value={value[i]}
+							/>
 						</div>
 					{/each}
 				</div>

@@ -1,11 +1,11 @@
 <script lang="ts">
-	export let min = 0
+	export let min: number | undefined = 0
 	export let max: number | undefined
 	export let value = min
 
 	let timeout: number
 	const cap = (num: number): number => {
-		num = Math.max(min, num)
+		if (typeof min === "number") num = Math.max(min, num)
 		if (typeof max === "number") num = Math.min(max, num)
 		return num
 	}

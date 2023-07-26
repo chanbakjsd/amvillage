@@ -6,6 +6,7 @@
 	import { status } from "../lib/state"
 
 	$: teamName = $state.config.teams[$state.team]?.name ?? ""
+	$: isAdmin = $state.config.teams[$state.team].is_admin
 	$: balance = $state.balances[$state.team] ?? Array($state.config.currencies.length)
 	$: sum = Math.min(...balance)
 	$: max = Math.max(...balance)
@@ -13,7 +14,7 @@
 
 	let loading = false
 	const trade = (i: number) => () => {
-		$ws.send("lock")
+		if (!isAdmin) $ws.send("lock")
 		loading = true
 		let interval: number
 		interval = setInterval(() => {
