@@ -4,6 +4,7 @@ export type State = {
 	config: Config
 	balances: number[][]
 	locks: (Lock | null)[]
+	notice: string
 
 	team: number
 	username: string
@@ -26,6 +27,7 @@ export const state = writable<State>({
 	config: { currencies: [], teams: [] },
 	balances: [],
 	locks: [],
+	notice: "",
 	team: 0,
 	username: "",
 })
@@ -35,12 +37,13 @@ export const error = writable("")
 
 export const ws = writable<WebSocket>()
 
-export const connect = () => {
+export const connect = (username: string, password: string) => {
 	const url = new URL("./ws", location.href)
 	url.protocol = location.protocol === "https:" ? "wss:" : "ws:"
 	const websocket = new WebSocket(url)
 	websocket.onopen = () => {
 		connected.set(true)
+		websocket.send(`login ${btoa(password)} ${username}`)
 	}
 	websocket.onclose = () => {
 		connected.set(false)

@@ -1,24 +1,23 @@
 <script lang="ts">
 	import { fly } from "svelte/transition"
 	import Button from "../components/Button.svelte"
-	import { error, state, ws } from "../lib/amvillage"
+	import { connect, error, state } from "../lib/amvillage"
 	import { status } from "../lib/state"
 
 	let username = ""
 	const password = location.pathname.split("/").at(-1)
 	const logon = () => {
 		$error = ""
-		$ws.send(`login ${btoa(password)} ${username}`)
+		connect(username, password)
 	}
 
 	$: {
 		if ($state.username) {
 			$status = {
-				status: "mainMenu"
+				status: "mainMenu",
 			}
 		}
 	}
-
 </script>
 
 <main transition:fly={{ y: 500 }}>
@@ -27,7 +26,7 @@
 		<input id="username" type="text" autocomplete="off" bind:value={username} placeholder="你的名字" />
 	</div>
 	<Button on:click={logon} disabled={!username}>开始</Button>
-		<div class="error">{$error}&nbsp;</div>
+	<div class="error">{$error}&nbsp;</div>
 </main>
 
 <style lang="postcss">

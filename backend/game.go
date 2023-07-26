@@ -51,6 +51,8 @@ type Game struct {
 	// Locks is a list of Lock that are currently held by members of a group as
 	// only one member of a group may trade at a time.
 	Locks []*Lock `json:"locks"`
+	// Notice is the current active notice being shown to the user.
+	Notice string `json:"notice"`
 }
 
 // Balance is the balance of a group.
@@ -125,6 +127,16 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 			return
 		}
 	}
+	switch args[0] {
+	case "notice":
+		if !g.config.Teams[c.team].IsAdmin {
+			go c.Write("error Cannot execute admin-only command")
+		}
+	}
+	if args[0] != "notice" && g.game.Notice != "" {
+		go c.Write("error Notice in progress")
+		return
+	}
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	switch args[0] {
@@ -185,6 +197,9 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 			nums = append(nums, num)
 		}
 		g.trade(c, nums[0], nums[1:])
+	case "notice":
+		g.update = true
+		g.game.Notice = strings.Join(args[1:], " ")
 	default:
 		go c.Write("error Unknown command " + args[0])
 	}

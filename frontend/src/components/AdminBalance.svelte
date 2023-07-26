@@ -34,7 +34,7 @@
 
 <style lang="postcss">
 	.table-container {
-		@apply relative max-w-full overflow-x-scroll border border-black;
+		@apply relative max-w-full overflow-x-auto border border-black;
 	}
 	table {
 		@apply border-separate border-spacing-0;

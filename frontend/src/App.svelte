@@ -1,14 +1,10 @@
 <script lang="ts">
-	import { onMount } from "svelte"
-	import { connect, connected } from "./lib/amvillage"
+	import { connected, state } from "./lib/amvillage"
 	import { status } from "./lib/state"
 	import Login from "./views/Login.svelte"
 	import MainMenu from "./views/MainMenu.svelte"
+	import Notice from "./views/Notice.svelte"
 	import Trade from "./views/Trade.svelte"
-
-	onMount(() => {
-		connect()
-	})
 
 	const views = {
 		login: Login,
@@ -17,9 +13,13 @@
 	}
 </script>
 
-<svelte:component this={views[$status.status]} />
+{#if $state.notice === ""}
+	<svelte:component this={views[$status.status]} />
+{:else}
+	<Notice />
+{/if}
 
-{#if !$connected}
+{#if !$connected && $status.status !== "login"}
 	<div class="warning">⚠️</div>
 {/if}
 

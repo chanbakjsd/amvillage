@@ -14,6 +14,7 @@
 	$: lock = $state.locks[$state.team]
 
 	let loading = false
+	let notice = ""
 	const trade = (i: number) => () => {
 		if (!isAdmin) $ws.send("lock")
 		loading = true
@@ -28,6 +29,9 @@
 				loading = false
 			}
 		}, 100)
+	}
+	const sendNotice = () => {
+		$ws.send("notice " + notice)
 	}
 </script>
 
@@ -66,6 +70,16 @@
 			</span>
 		{/if}
 	</div>
+	{#if isAdmin}
+		<hr />
+		<div class="adminButtons">
+			<div class="notice">
+				<span>突发事件</span>
+				<input bind:value={notice} />
+				<Button on:click={sendNotice}>发送</Button>
+			</div>
+		</div>
+	{/if}
 </main>
 
 <style lang="postcss">
@@ -98,5 +112,14 @@
 	}
 	.error {
 		@apply text-red-800;
+	}
+	.adminButtons {
+		@apply flex flex-col items-center;
+	}
+	.notice {
+		@apply flex gap-2 items-center;
+	}
+	input {
+		@apply border border-black;
 	}
 </style>
