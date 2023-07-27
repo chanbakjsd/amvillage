@@ -133,9 +133,13 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 			go c.Write("error Cannot execute admin-only command")
 		}
 	}
-	if args[0] != "notice" && g.game.Notice != "" {
-		go c.Write("error Notice in progress")
-		return
+	switch args[0] {
+	case "login", "notice":
+	default:
+		if g.game.Notice != "" {
+			go c.Write("error Notice in progress")
+			return
+		}
 	}
 	g.mu.Lock()
 	defer g.mu.Unlock()
