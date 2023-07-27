@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { state } from "../lib/amvillage"
+
+	const currencyCount = $state.config.currencies.length
 </script>
 
 <div>
@@ -24,7 +26,19 @@
 					{#if team.is_admin}
 						<td>{-$state.balances[j][i]}</td>
 					{:else}
-						<td>{$state.balances[j][i]}</td>
+						<td class:zero={$state.balances[j][i] <= 0}>{$state.balances[j][i]}</td>
+					{/if}
+				{/each}
+			</tr>
+		{/each}
+		{#each $state.config.gems as gem, i}
+			<tr>
+				<td class="first">{gem}</td>
+				{#each $state.config.teams as team, j}
+					{#if team.is_admin}
+						<td>{-$state.balances[j][currencyCount + i]}</td>
+					{:else}
+						<td class:zero={$state.balances[j][currencyCount + i] <= 0}>{$state.balances[j][currencyCount + i]}</td>
 					{/if}
 				{/each}
 			</tr>
@@ -33,6 +47,9 @@
 </div>
 
 <style lang="postcss">
+	.gold {
+		@apply font-semibold text-yellow-300;
+	}
 	.table-container {
 		@apply relative max-w-full overflow-x-auto border border-black;
 	}
@@ -44,9 +61,9 @@
 		@apply px-2 py-1 border border-black min-w-[3rem];
 	}
 	.first {
-		@apply sticky left-0 bg-purple-700;
+		@apply sticky left-0 bg-purple-700 min-w-[6rem];
 	}
-	.gold {
-		@apply font-semibold text-yellow-300;
+	.zero {
+		@apply text-red-300;
 	}
 </style>

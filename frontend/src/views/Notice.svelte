@@ -19,7 +19,9 @@
 
 <main transition:fly={{ y: 500 }}>
 	<div class="content">
-		{$state.notice}
+		<div>
+			{$state.notice}
+		</div>
 	</div>
 	{#if isAdmin}
 		<Button on:click={cancel} classes="w-full rounded-full">恢复</Button>
@@ -31,6 +33,6 @@
 		@apply p-4 flex flex-col gap-8 h-full;
 	}
 	.content {
-		@apply flex flex-grow items-center justify-center text-3xl;
+		@apply flex flex-grow items-center justify-center text-3xl break-words;
 	}
 </style>

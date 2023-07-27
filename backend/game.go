@@ -14,7 +14,7 @@ import (
 func NewGameState(cfg Config) *GameState {
 	balances := make([]Balance, len(cfg.Teams))
 	for i := range balances {
-		balances[i] = make([]int, len(cfg.Currencies))
+		balances[i] = make([]int, len(cfg.Currencies)+len(cfg.Gems))
 	}
 	return &GameState{
 		game: Game{
@@ -187,7 +187,7 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 		g.update = true
 		g.releaseLock(c)
 	case "trade":
-		if len(args) != 2+len(g.game.Currencies) {
+		if len(args) != 2+len(g.game.Currencies)+len(g.game.Gems) {
 			go c.Write("error Unexpected number of arguments")
 			return
 		}

@@ -12,6 +12,7 @@ export type State = {
 
 export type Config = {
 	currencies: string[]
+	gems: string[]
 	teams: {
 		name: string
 		is_admin: boolean
@@ -24,7 +25,7 @@ type Lock = {
 }
 
 export const state = writable<State>({
-	config: { currencies: [], teams: [] },
+	config: { currencies: [], gems: [], teams: [] },
 	balances: [],
 	locks: [],
 	notice: "",
@@ -48,12 +49,12 @@ export const connect = (username: string, password: string) => {
 	websocket.onclose = () => {
 		connected.set(false)
 		console.warn("Websocket close")
-		setTimeout(connect, 1000)
+		setTimeout(() => connect(username, password), 1000)
 	}
 	websocket.onerror = err => {
 		connected.set(false)
 		console.warn("Websocket error:", err)
-		setTimeout(connect, 1000)
+		setTimeout(() => connect(username, password), 1000)
 	}
 	websocket.onmessage = (msg: MessageEvent) => {
 		const data = msg.data as string

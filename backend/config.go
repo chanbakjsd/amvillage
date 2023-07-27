@@ -9,6 +9,8 @@ type Config struct {
 
 	// Currencies is the list of currencies in play.
 	Currencies []string `json:"currencies"`
+	// Gems is the list of gems in play.
+	Gems []string `json:"gems"`
 	// Teams is the list of teams participating in the game.
 	Teams []TeamConfig `json:"teams"`
 }
@@ -35,6 +37,7 @@ func (c Config) WithoutSecret() Config {
 	}
 	return Config{
 		Currencies: c.Currencies,
+		Gems:       c.Gems,
 		Teams:      teams,
 	}
 }

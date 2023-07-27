@@ -8,7 +8,9 @@
 
 	$: teamName = $state.config.teams[$state.team]?.name ?? ""
 	$: isAdmin = $state.config.teams[$state.team].is_admin
-	$: balance = $state.balances[$state.team] ?? Array($state.config.currencies.length)
+	$: currencyCount = $state.config.currencies.length
+	$: balance = $state.balances[$state.team].slice(0, currencyCount) ?? Array(currencyCount)
+	$: gemBalance = $state.balances[$state.team].slice(currencyCount)
 	$: sum = Math.min(...balance)
 	$: max = Math.max(...balance)
 	$: lock = $state.locks[$state.team]
@@ -48,13 +50,19 @@
 			<hr />
 			<p class="label">1庄 = 全部资源的组合</p>
 			<table>
-				{#each balance as v, i}
-					<tr class:isMin={v === sum}>
-						<td><Bar value={v} {max} isMin={v === sum} /></td>
-						<td>{v} {$state.config.currencies[i]}</td>
+				{#each $state.config.currencies as currency, i}
+					<tr class:isMin={balance[i] === sum}>
+						<td><Bar value={balance[i]} {max} isMin={balance[i] === sum} /></td>
+						<td>{balance[i]} {currency}</td>
 					</tr>
 				{/each}
 			</table>
+			<hr />
+			<div class="gem">
+				{#each $state.config.gems as gem, i}
+					<span class:noGem={gemBalance[i] === 0}>{gemBalance[i]} {gem}</span>
+				{/each}
+			</div>
 		{/if}
 	</div>
 	<div class="trade">
@@ -108,6 +116,12 @@
 		@apply text-left;
 	}
 	.isMin td {
+		@apply text-red-300;
+	}
+	.gem {
+		@apply flex flex-wrap gap-x-5 gap-y-0.5 items-center justify-center;
+	}
+	.noGem {
 		@apply text-red-300;
 	}
 	.trade {

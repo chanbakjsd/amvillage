@@ -6,11 +6,14 @@
 	import { status } from "../lib/state"
 
 	const value = Array($state.config.currencies.length).fill(0)
+	const gemValue = Array($state.config.gems.length).fill(0)
 	$: isAdmin = $state.config.teams[$state.team].is_admin
 	$: lock = $state.locks[$state.team]
 	$: target = $status.status === "trade" ? $status.target : 0
-	$: tradeOK =
-		value.some(num => num !== 0) && (isAdmin || value.every((num, i) => num <= $state.balances[$state.team][i]))
+	$: hasBalance =
+		value.every((num, i) => num <= $state.balances[$state.team][i]) &&
+		gemValue.every((num, i) => num <= $state.balances[$state.team][$state.config.currencies.length + i])
+	$: tradeOK = (value.some(num => num !== 0) || gemValue.some(num => num !== 0)) && (isAdmin || hasBalance)
 	const returnToMenu = () => {
 		$status = {
 			status: "mainMenu",
@@ -21,7 +24,7 @@
 		$ws.send("cancel")
 	}
 	const trade = () => {
-		$ws.send(`trade ${target} ${value.map(a => `${a}`).join(" ")}`)
+		$ws.send(`trade ${target} ${[...value, ...gemValue].map(a => `${a}`).join(" ")}`)
 		returnToMenu()
 	}
 </script>
@@ -50,6 +53,16 @@
 							min={isAdmin ? undefined : 0}
 							max={isAdmin ? undefined : $state.balances[$state.team][i]}
 							bind:value={value[i]}
+						/>
+					{/each}
+				</div>
+				<div class="control">
+					{#each $state.config.gems as gem, i}
+						<span>{gem}</span>
+						<NumberInput
+							min={isAdmin ? undefined : 0}
+							max={isAdmin ? undefined : $state.balances[$state.team][i]}
+							bind:value={gemValue[i]}
 						/>
 					{/each}
 				</div>
