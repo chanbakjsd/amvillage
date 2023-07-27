@@ -49,7 +49,7 @@
 			<p class="label">1庄 = 全部资源的组合</p>
 			<table>
 				{#each balance as v, i}
-					<tr class="entry" class:isMin={v === sum}>
+					<tr class:isMin={v === sum}>
 						<td><Bar value={v} {max} isMin={v === sum} /></td>
 						<td>{v} {$state.config.currencies[i]}</td>
 					</tr>
@@ -103,6 +103,9 @@
 	}
 	table {
 		@apply mx-auto border-separate border-spacing-x-2;
+	}
+	tr {
+		@apply text-left;
 	}
 	.isMin td {
 		@apply text-red-300;

@@ -45,14 +45,12 @@
 				</div>
 				<div class="control">
 					{#each $state.config.currencies as currency, i}
-						<div>
-							<span>{currency}</span>
-							<NumberInput
-								min={isAdmin ? undefined : 0}
-								max={isAdmin ? undefined : $state.balances[$state.team][i]}
-								bind:value={value[i]}
-							/>
-						</div>
+						<span>{currency}</span>
+						<NumberInput
+							min={isAdmin ? undefined : 0}
+							max={isAdmin ? undefined : $state.balances[$state.team][i]}
+							bind:value={value[i]}
+						/>
 					{/each}
 				</div>
 			</div>
@@ -92,10 +90,8 @@
 		@apply w-full border-black;
 	}
 	.trade .control {
-		@apply flex flex-wrap gap-x-3 gap-y-2 items-center justify-center;
-	}
-	.control > div {
-		@apply flex gap-x-3 items-center;
+		@apply grid gap-x-3 gap-y-2 items-center justify-center;
+		grid-template-columns: auto auto;
 	}
 	.buttons {
 		@apply sticky bottom-0 flex flex-col gap-2;
