@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	{#if isAdmin}
-		<Button on:click={cancel} classes="w-full rounded-full">恢复</Button>
+		<Button on:click={cancel} classes="w-full rounded-full">恢复（所有玩家）</Button>
 	{/if}
 </main>
 

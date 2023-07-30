@@ -21,9 +21,10 @@
 </script>
 
 <main transition:fly={{ y: 500 }}>
+	<h1>欢迎来到仙泽庄！</h1>
 	<div>
 		<label for="username">显示名：</label>
-		<input id="username" type="text" autocomplete="off" bind:value={username} placeholder="你的名字" />
+		<input id="username" type="text" autocomplete="off" bind:value={username} placeholder="你OG会看到的名字" />
 	</div>
 	<Button on:click={logon} disabled={!username}>开始</Button>
 	<div class="error">{$error}&nbsp;</div>
@@ -32,6 +33,9 @@
 <style lang="postcss">
 	main {
 		@apply flex flex-col items-center justify-center gap-4 w-full h-full;
+	}
+	h1 {
+		@apply font-semibold text-3xl text-center;
 	}
 	div {
 		@apply flex gap-2 items-center justify-center;
