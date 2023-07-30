@@ -5,6 +5,7 @@ export type State = {
 	balances: number[][]
 	locks: (Lock | null)[]
 	notice: string
+	popup: string
 
 	team: number
 	username: string
@@ -31,6 +32,7 @@ export const state = writable<State>({
 	notice: "",
 	team: 0,
 	username: "",
+	popup: "",
 })
 
 export const connected = writable(false)

@@ -17,6 +17,7 @@
 
 	let loading = false
 	let notice = ""
+	let popup = ""
 	const trade = (i: number) => () => {
 		if (!isAdmin) $ws.send("lock")
 		loading = true
@@ -34,6 +35,12 @@
 	}
 	const sendNotice = () => {
 		$ws.send("notice " + notice)
+	}
+	const sendPopup = () => {
+		$ws.send("popup " + popup)
+	}
+	const hidePopup = () => {
+		$ws.send("popup")
 	}
 </script>
 
@@ -81,10 +88,14 @@
 	{#if isAdmin}
 		<hr />
 		<div class="adminButtons">
-			<div class="notice">
-				<span>突发事件</span>
-				<input bind:value={notice} />
-				<Button on:click={sendNotice}>发送</Button>
+			<span>突发事件（全屏）</span>
+			<input bind:value={notice} />
+			<Button on:click={sendNotice}>发送</Button>
+			<span>系统告示（上方）</span>
+			<input bind:value={popup} />
+			<div class="flex flex-wrap justify-center">
+				<Button on:click={sendPopup}>发送</Button>
+				<Button on:click={hidePopup}>隐藏</Button>
 			</div>
 		</div>
 	{/if}
@@ -131,10 +142,8 @@
 		@apply text-red-800;
 	}
 	.adminButtons {
-		@apply flex flex-col items-center;
-	}
-	.notice {
-		@apply flex gap-2 items-center;
+		@apply grid justify-center items-center p-2 gap-2;
+		grid-template-columns: auto 10rem auto;
 	}
 	input {
 		@apply border border-black;

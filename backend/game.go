@@ -53,6 +53,8 @@ type Game struct {
 	Locks []*Lock `json:"locks"`
 	// Notice is the current active notice being shown to the user.
 	Notice string `json:"notice"`
+	// Popup is the current active popup being shown to the user.
+	Popup string `json:"popup"`
 }
 
 // Balance is the balance of a group.
@@ -128,13 +130,13 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 		}
 	}
 	switch args[0] {
-	case "notice":
+	case "notice", "popup":
 		if !g.config.Teams[c.team].IsAdmin {
 			go c.Write("error Cannot execute admin-only command")
 		}
 	}
 	switch args[0] {
-	case "login", "notice":
+	case "login", "notice", "popup":
 	default:
 		if g.game.Notice != "" {
 			go c.Write("error Notice in progress")
@@ -204,6 +206,9 @@ func (g *GameState) ProcessCommand(c *Conn, args []string) {
 	case "notice":
 		g.update = true
 		g.game.Notice = strings.Join(args[1:], " ")
+	case "popup":
+		g.update = true
+		g.game.Popup = strings.Join(args[1:], " ")
 	default:
 		go c.Write("error Unknown command " + args[0])
 	}

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind base;
 
+#app {
+	@apply h-screen overflow-y-auto flex flex-col;
+}
 main {
 	@apply absolute top-0 left-0 w-full;
 }
