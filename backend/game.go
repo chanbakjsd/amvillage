@@ -253,9 +253,9 @@ func (g *GameState) trade(c *Conn, to int, amount []int) {
 		go c.Write("error Invalid target team ID")
 		return
 	}
-	// Non-admins' inputs are validated. Admins may cause balances to go
-	// negative.
 	if !g.game.Teams[from].IsAdmin {
+		// Non-admins' inputs are validated. Admins may cause their own
+		// balances to go negative.
 		for i, v := range amount {
 			if v < 0 {
 				go c.Write("error Cannot send negative amount")
@@ -266,7 +266,15 @@ func (g *GameState) trade(c *Conn, to int, amount []int) {
 				return
 			}
 		}
+	} else if !g.game.Teams[to].IsAdmin {
+		// Normalize amounts such that the non-admin team will not go negative.
+		for i, v := range amount {
+			if v+g.game.Balances[to][i] < 0 {
+				amount[i] = -g.game.Balances[to][i]
+			}
+		}
 	}
+
 	// Execute the trade.
 	for i, v := range amount {
 		g.game.Balances[from][i] -= v

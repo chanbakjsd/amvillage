@@ -7,12 +7,13 @@
 
 	const value = Array($state.config.currencies.length).fill(0)
 	const gemValue = Array($state.config.gems.length).fill(0)
+	$: currencyCount = $state.config.currencies.length
 	$: isAdmin = $state.config.teams[$state.team].is_admin
 	$: lock = $state.locks[$state.team]
 	$: target = $status.status === "trade" ? $status.target : 0
 	$: hasBalance =
-		value.every((num, i) => num <= $state.balances[$state.team][i]) &&
-		gemValue.every((num, i) => num <= $state.balances[$state.team][$state.config.currencies.length + i])
+		value.every((num, i) => num <= $state.balances[$state.team][i] || num === 0) &&
+		gemValue.every((num, i) => num <= $state.balances[$state.team][currencyCount + i] || num === 0)
 	$: tradeOK = (value.some(num => num !== 0) || gemValue.some(num => num !== 0)) && (isAdmin || hasBalance)
 	const returnToMenu = () => {
 		$status = {
@@ -50,7 +51,7 @@
 					{#each $state.config.currencies as currency, i}
 						<span>{currency}</span>
 						<NumberInput
-							min={isAdmin ? undefined : 0}
+							min={isAdmin ? -$state.balances[target][i] : 0}
 							max={isAdmin ? undefined : $state.balances[$state.team][i]}
 							bind:value={value[i]}
 						/>
@@ -60,8 +61,8 @@
 					{#each $state.config.gems as gem, i}
 						<span>{gem}</span>
 						<NumberInput
-							min={isAdmin ? undefined : 0}
-							max={isAdmin ? undefined : $state.balances[$state.team][i]}
+							min={isAdmin ? -$state.balances[$state.team][currencyCount+i] : 0}
+							max={isAdmin ? undefined : $state.balances[$state.team][currencyCount+i]}
 							bind:value={gemValue[i]}
 						/>
 					{/each}

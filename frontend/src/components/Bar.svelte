@@ -4,10 +4,11 @@
 	export let isMin = false
 
 	$: displayMax = Math.max(max, 1)
+	$: width = value < 0 ? 100 : (value / displayMax) * 100
 </script>
 
-<div class="bar" class:isMin>
-	<div class="fill" style="width:{(value / displayMax) * 100}%" />
+<div class="bar" class:isMin class:negative={value < 0}>
+	<div class="fill" style="width:{width}%" />
 </div>
 
 <style lang="postcss">
@@ -22,5 +23,11 @@
 	}
 	.bar.isMin .fill {
 		@apply bg-yellow-300;
+	}
+	.bar.negative {
+		@apply border-red-300;
+	}
+	.bar.negative .fill {
+		@apply border-red-300;
 	}
 </style>
