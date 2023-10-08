@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { fly } from "svelte/transition"
+	import { _ } from "svelte-i18n"
 	import Button from "../components/Button.svelte"
+	import I18n from "../components/I18n.svelte"
 	import NumberInput from "../components/NumberInput.svelte"
 	import { state, ws } from "../lib/amvillage"
 	import { status } from "../lib/state"
@@ -22,7 +24,7 @@
 	}
 	const cancel = () => {
 		returnToMenu()
-		$ws.send("cancel")
+		if (!isAdmin) $ws.send("cancel")
 	}
 	const trade = () => {
 		$ws.send(`trade ${target} ${[...value, ...gemValue].map(a => `${a}`).join(" ")}`)
@@ -33,17 +35,21 @@
 <main transition:fly={{ y: 500 }}>
 	<div class="content">
 		{#if $state.locks[$state.team] === null && !isAdmin}
-			<div class="error">交易失败，请重新尝试</div>
+			<div class="error">{$_("trade.error.timeout")}</div>
 		{:else if lock?.member !== $state.username && !isAdmin}
 			<div class="error">
-				<span><b>{$state.locks[$state.team].member}</b>正在交易中</span>
+				<I18n id="trade.error.othersTrading" values={{ username: lock?.member }} />
 			</div>
 		{:else}
 			<div class="trade">
 				<div>
-					<span class="explainer">转账至{$state.config.teams[target].name}</span>
+					<span class="explainer">
+						{$_("trade.title", { values: { target: $state.config.teams[target].name } })}
+					</span>
 					{#if !isAdmin}
-						<span class="lock">您剩下<b>{Math.floor(lock.millis_left / 1000)}</b>秒</span>
+						<span class="lock">
+							<I18n id="trade.timeRemaining" values={{ sec: Math.floor(lock.millis_left / 1000) }} />
+						</span>
 					{/if}
 					<hr />
 				</div>
@@ -61,8 +67,8 @@
 					{#each $state.config.gems as gem, i}
 						<span>{gem}</span>
 						<NumberInput
-							min={isAdmin ? -$state.balances[$state.team][currencyCount+i] : 0}
-							max={isAdmin ? undefined : $state.balances[$state.team][currencyCount+i]}
+							min={isAdmin ? -$state.balances[$state.team][currencyCount + i] : 0}
+							max={isAdmin ? undefined : $state.balances[$state.team][currencyCount + i]}
 							bind:value={gemValue[i]}
 						/>
 					{/each}
@@ -72,9 +78,9 @@
 	</div>
 	<div class="buttons">
 		{#if lock?.member === $state.username || isAdmin}
-			<button class="confirm" on:click={trade} disabled={!tradeOK}>成交</button>
+			<button class="confirm" on:click={trade} disabled={!tradeOK}>{$_("trade.button.confirm")}</button>
 		{/if}
-		<Button on:click={cancel} classes="w-full rounded-full">回到主页面</Button>
+		<Button on:click={cancel} classes="w-full rounded-full">{$_("trade.button.cancel")}</Button>
 	</div>
 </main>
 
@@ -87,9 +93,6 @@
 	}
 	.error {
 		@apply grid justify-center items-center text-red-800 font-bold text-3xl h-full;
-	}
-	b {
-		@apply font-semibold;
 	}
 	.trade {
 		@apply flex flex-col gap-8;

@@ -1,0 +1,35 @@
+{
+	"admin": {
+		"text.explanation": "You are an <gold>administrator</gold>, here are the balances of all groups:",
+		"label.notice": "Event Notice (Fullscreen)",
+		"label.banner": "Event Notice (Banner)",
+		"label.given": "{team} (given)",
+		"button.sendNotice": "Send",
+		"button.sendBanner": "Send",
+		"button.hideBanner": "Hide"
+	},
+	"login": {
+		"text.welcome": "Welcome to AmVillage!",
+		"label.username": "Username:",
+		"placeholder.username": "Your display name",
+		"button.start": "Start"
+	},
+	"mainmenu": {
+		"text.welcome": "Welcome back, <b>{username}</b>!",
+		"label.balance": "<b>{teamName}</b> has",
+		"label.combined": "{total} Combined",
+		"label.combinedExplanation": "1 Combined = The combination of every resource",
+		"error.othersTrading": "<b>{player}</b> is currently trading (<b>{sec, number}</b>s left)"
+	},
+	"notice": {
+		"button.stop": "Restore (for all players)"
+	},
+	"trade": {
+		"error.othersTrading": "<b>{username}</b> is currently trading",
+		"error.timeout": "Trading failed, please try again",
+		"title": "Transfer to {target}",
+		"timeRemaining": "You have <b>{sec, number}</b> seconds left",
+		"button.confirm": "Confirm",
+		"button.cancel": "Return to Main Menu"
+	}
+}

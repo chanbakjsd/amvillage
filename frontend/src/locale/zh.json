@@ -1,0 +1,35 @@
+{
+	"admin": {
+		"text.explanation": "您是管理员，以下为组别余额。",
+		"label.notice": "突发事件（全屏）",
+		"label.banner": "系统告示（上方）",
+		"label.given": "{team} （给的数量）",
+		"button.sendNotice": "发送",
+		"button.sendBanner": "发送",
+		"button.hideBanner": "隐藏"
+	},
+	"login": {
+		"text.welcome": "欢迎来到仙泽庄！",
+		"label.username": "显示名：",
+		"placeholder.username": "你OG会看到的名字",
+		"button.start": "开始"
+	},
+	"mainmenu": {
+		"text.welcome": "欢迎回来，<b>{username}</b>！",
+		"label.balance": "<b>{teamName}</b>拥有",
+		"label.combined": "{total} 庄",
+		"label.combinedExplanation": "1庄 = 全部资源的组合",
+		"error.othersTrading": "<b>{player}</b>正在交易中（<b>{sec, number}</b>秒后失效）"
+	},
+	"notice": {
+		"button.stop": "恢复（所有玩家）"
+	},
+	"trade": {
+		"error.othersTrading": "<b>{username}</b>正在交易中",
+		"error.timeout": "交易失败，请重新尝试",
+		"title": "转账至{target}",
+		"timeRemaining": "您剩下<b>{sec, number}</b>秒",
+		"button.confirm": "成交",
+		"button.cancel": "回到主页面"
+	}
+}

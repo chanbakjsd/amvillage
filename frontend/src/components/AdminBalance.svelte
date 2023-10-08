@@ -1,19 +1,19 @@
 <script lang="ts">
+	import { _ } from "svelte-i18n"
 	import { state } from "../lib/amvillage"
+	import I18n from "./I18n.svelte"
 
 	const currencyCount = $state.config.currencies.length
 </script>
 
-<div>
-	您是<span class="gold">管理员</span>，以下为组别余额。
-</div>
+<div><I18n id="admin.text.explanation" /></div>
 <div class="table-container">
 	<table>
 		<tr>
 			<th class="first" />
 			{#each $state.config.teams as team}
 				{#if team.is_admin}
-					<td>{team.name}（给的数量）</td>
+					<td>{$_("admin.label.given", { values: { team: team.name } })}</td>
 				{:else}
 					<td>{team.name}</td>
 				{/if}
@@ -47,9 +47,6 @@
 </div>
 
 <style lang="postcss">
-	.gold {
-		@apply font-semibold text-yellow-300;
-	}
 	.table-container {
 		@apply relative max-w-full overflow-x-auto border border-black;
 	}

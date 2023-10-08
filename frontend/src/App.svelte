@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { connected, state } from "./lib/amvillage"
+	import { onMount } from "svelte"
+	import { addMessages, init as initI18n, locale } from "svelte-i18n"
+	import { connect, connected, state, type State } from "./lib/amvillage"
 	import { status } from "./lib/state"
+	import localeEn from "./locale/en.json"
+	import localeZh from "./locale/zh.json"
 	import Login from "./views/Login.svelte"
 	import MainMenu from "./views/MainMenu.svelte"
 	import Notice from "./views/Notice.svelte"
@@ -11,6 +15,17 @@
 		mainMenu: MainMenu,
 		trade: Trade,
 	}
+
+	state.subscribe((state: State) => locale.set(state.config.lang))
+	addMessages("en", localeEn)
+	addMessages("zh", localeZh)
+	initI18n({
+		initialLocale: "en",
+		fallbackLocale: "en",
+		ignoreTag: false,
+	})
+
+	onMount(() => connect())
 </script>
 
 <div class="popup" class:show={$state.popup && $state.notice === ""}><div>{$state.popup}</div></div>

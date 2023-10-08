@@ -1,7 +1,9 @@
 {
 	"listen_addr": ":8080",
+	"lang": "en",
 
 	"currencies": ["A", "B", "C", "D", "E", "F"],
+	"gems": ["Gem A", "Gem B", "Gem C", "Gem D", "Gem E", "Gem F"],
 	"teams": [
 		{
 			"name": "Group 1",

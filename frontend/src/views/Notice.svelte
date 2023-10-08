@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte"
+	import { _ } from "svelte-i18n"
 	import { fly } from "svelte/transition"
 	import Button from "../components/Button.svelte"
 	import { state, ws } from "../lib/amvillage"
@@ -24,7 +25,7 @@
 		</div>
 	</div>
 	{#if isAdmin}
-		<Button on:click={cancel} classes="w-full rounded-full">恢复（所有玩家）</Button>
+		<Button on:click={cancel} classes="w-full rounded-full">{$_("notice.button.stop")}</Button>
 	{/if}
 </main>
 

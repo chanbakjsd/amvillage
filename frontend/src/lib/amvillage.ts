@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { get, writable } from "svelte/store"
 
 export type State = {
 	config: Config
@@ -12,6 +12,7 @@ export type State = {
 }
 
 export type Config = {
+	lang: "en" | "zh"
 	currencies: string[]
 	gems: string[]
 	teams: {
@@ -25,8 +26,13 @@ type Lock = {
 	millis_left: number
 }
 
+export type Cred = {
+	username: string
+	password: string
+}
+
 export const state = writable<State>({
-	config: { currencies: [], gems: [], teams: [] },
+	config: { lang: "en", currencies: [], gems: [], teams: [] },
 	balances: [],
 	locks: [],
 	notice: "",
@@ -37,26 +43,38 @@ export const state = writable<State>({
 
 export const connected = writable(false)
 export const error = writable("")
+export const creds = writable<Cred|null>(null)
 
 export const ws = writable<WebSocket>()
 
-export const connect = (username: string, password: string) => {
-	const url = new URL("./ws", location.href)
+const tryLogin = () => {
+	const isConnected = get(connected)
+	const cred = get(creds)
+	const websocket = get(ws)
+	if (isConnected && cred && websocket) {
+		websocket.send(`login ${btoa(cred.password)} ${cred.username}`)
+	}
+}
+
+creds.subscribe(() => tryLogin())
+
+export const connect = () => {
+	const url = new URL(import.meta.env.VITE_BACKEND + "/ws", location.href)
 	url.protocol = location.protocol === "https:" ? "wss:" : "ws:"
 	const websocket = new WebSocket(url)
 	websocket.onopen = () => {
 		connected.set(true)
-		websocket.send(`login ${btoa(password)} ${username}`)
+		tryLogin()
 	}
 	websocket.onclose = () => {
 		connected.set(false)
 		console.warn("Websocket close")
-		setTimeout(() => connect(username, password), 1000)
+		setTimeout(() => connect(), 1000)
 	}
 	websocket.onerror = err => {
 		connected.set(false)
 		console.warn("Websocket error:", err)
-		setTimeout(() => connect(username, password), 1000)
+		setTimeout(() => connect(), 1000)
 	}
 	websocket.onmessage = (msg: MessageEvent) => {
 		const data = msg.data as string

@@ -7,6 +7,9 @@ type Config struct {
 	// ListenAddr is the address for the HTTP server to listen.
 	ListenAddr string `json:"listen_addr,omitempty"`
 
+	// Language is the language to use for the frontend.
+	Language string `json:"lang"`
+
 	// Currencies is the list of currencies in play.
 	Currencies []string `json:"currencies"`
 	// Gems is the list of gems in play.
@@ -36,6 +39,7 @@ func (c Config) WithoutSecret() Config {
 		})
 	}
 	return Config{
+		Language:   c.Language,
 		Currencies: c.Currencies,
 		Gems:       c.Gems,
 		Teams:      teams,

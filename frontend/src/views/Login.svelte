@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { fly } from "svelte/transition"
+	import { _ } from "svelte-i18n"
 	import Button from "../components/Button.svelte"
-	import { connect, error, state } from "../lib/amvillage"
+	import { creds, error, state } from "../lib/amvillage"
 	import { status } from "../lib/state"
 
 	let username = ""
 	const password = location.pathname.split("/").at(-1)
 	const logon = () => {
 		$error = ""
-		connect(username, password)
+		$creds = { username, password }
 	}
 
 	$: {
@@ -21,12 +22,18 @@
 </script>
 
 <main transition:fly={{ y: 500 }}>
-	<h1>欢迎来到仙泽庄！</h1>
+	<h1>{$_("login.text.welcome")}</h1>
 	<div>
-		<label for="username">显示名：</label>
-		<input id="username" type="text" autocomplete="off" bind:value={username} placeholder="你OG会看到的名字" />
+		<label for="username">{$_("login.label.username")}</label>
+		<input
+			id="username"
+			type="text"
+			autocomplete="off"
+			bind:value={username}
+			placeholder={$_("login.placeholder.username")}
+		/>
 	</div>
-	<Button on:click={logon} disabled={!username}>开始</Button>
+	<Button on:click={logon} disabled={!username}>{$_("login.button.start")}</Button>
 	<div class="error">{$error}&nbsp;</div>
 </main>
 

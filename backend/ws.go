@@ -40,6 +40,7 @@ func (g *GameState) handleWebsocket(w http.ResponseWriter, req *http.Request) {
 		team:    -1,
 	}
 	g.Register(conn)
+	g.pushState(conn)
 	go conn.readPump(g)
 	go func() {
 		for range time.NewTicker(pingInterval).C {
